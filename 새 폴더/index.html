@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음식 맞추기 게임</title>
+</head>
+<body>
+
+    <header>
+        <h1>안녕하세요! 여러분의 웹페이지에 오신 것을 환영합니다.</h1>
+    </header>
+
+    <section>
+        <p>게임 </p>
+        <p>간단한 웹페이지를 만들어보는 재미를 느껴보세요!</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 여러분의 웹페이지. 모든 권리 보유.</p>
+    </footer>
+
+</body>
+</html>
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #guess-input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #F00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>숫자 맞추기 게임</h1>
+
+    <p id="hint">1에서 100까지의 숫자를 맞춰보세요!</p>
+
+    <input type="number" id="guess-input" placeholder="숫자를 입력하세요">
+    <button onclick="checkGuess()">제출</button>
+
+    <div id="result"></div>
+
+    <script>
+        let minRange = 1;
+        let maxRange = 100;
+        let targetNumber = generateRandomNumber(minRange, maxRange);
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function updateHint() {
+            document.getElementById('hint').innerText = `범위: ${minRange}에서 ${maxRange}까지의 숫자를 맞춰보세요!`;
+        }
+
+        function checkGuess() {
+            const userGuess = document.getElementById('guess-input').value;
+
+            if (!isNaN(userGuess) && userGuess >= minRange && userGuess <= maxRange) {
+                attempts++;
+
+                if (userGuess == targetNumber) {
+                    document.getElementById('result').innerHTML = `축하합니다! ${attempts}번만에 숫자를 맞추셨어요!`;
+                    disableInput();
+                } else {
+                    const hint = userGuess < targetNumber ? '높은 숫자입니다.' : '낮은 숫자입니다.';
+                    document.getElementById('result').innerHTML = `틀렸어요! ${hint} 다시 도전하세요. (남은 시도: ${maxAttempts - attempts})`;
+
+                    if (attempts === maxAttempts) {
+                        document.getElementById('result').innerHTML = `게임 오버! 정답은 ${targetNumber}였어요. 다시 시작하세요.`;
+                        disableInput();
+                    }
+
+                    // 범위 좁히기
+                    if (userGuess < targetNumber) {
+                        minRange = Math.max(minRange, userGuess + 1);
+                    } else {
+                        maxRange = Math.min(maxRange, userGuess - 1);
+                    }
+
+                    // 새로운 숫자 생성
+                    targetNumber = generateRandomNumber(minRange, maxRange);
+
+                    // 힌트 업데이트
+                    updateHint();
+
+                    // 장애물 생성
+                    createObstacle();
+                }
+            } else {
+                document.getElementById('result').innerHTML = `범위 내에서 숫자를 입력하세요 ( ${minRange} - ${maxRange} )`;
+            }
+        }
+
+        function disableInput() {
+            document.getElementById('guess-input').disabled = true;
+            document.querySelector('button').disabled = true;
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            obstacle.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            obstacle.style.top = '0';
+
+            document.body.appendChild(obstacle);
+
+            animateObstacle(obstacle);
+        }
+
+        function animateObstacle(obstacle) {
+            const speed = Math.random() * 2 + 1;
+
+            function move() {
+                const top = parseInt(obstacle.style.top, 10);
+                obstacle.style.top = `${top + speed}px`;
+
+                if (top > window.innerHeight) {
+                    obstacle.remove();
+                } else {
+                    requestAnimationFrame(move);
+                }
+            }
+
+            move();
+        }
+
+        // 초기 힌트 업데이트
+        updateHint();
+    </script>
+
+</body>
+</html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #guess-input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>숫자 맞추기 게임</h1>
+
+    <p>1에서 10까지의 숫자를 맞춰보세요!</p>
+
+    <input type="number" id="guess-input" placeholder="1,2,3,4,5,6,7,8,9,10">
+    <button onclick="checkGuess()">제출</button>
+
+    <div id="result"></div>
+
+    <script>
+        // 랜덤 숫자 생성
+        const targetNumber = Math.floor(Math.random() * 10) + 1;
+
+        function checkGuess() {
+            // 사용자 입력 가져오기
+            const userGuess = document.getElementById('guess-input').value;
+
+            // 입력이 숫자인지 확인
+            if (!isNaN(userGuess) && userGuess >= 1 && userGuess <= 10) {
+                // 숫자를 맞추었는지 확인
+                if (userGuess == targetNumber) {
+                    document.getElementById('result').innerHTML = '축하합니다! 숫자를 맞추셨어요!';
+                } else {
+                    document.getElementById('result').innerHTML = '아쉽게도 틀렸어요. 다시 도전하세요!';
+                }
+            } else {
+                document.getElementById('result').innerHTML = '1,2,3,4,5,6,7,8,9,10';
+            }
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #guess-input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>숫자 맞추기 게임</h1>
+
+    <p id="hint">1에서 100까지의 숫자를 맞춰보세요!</p>
+
+    <input type="number" id="guess-input" placeholder="숫자를 입력하세요">
+    <button onclick="checkGuess()">제출</button>
+
+    <div id="result"></div>
+
+    <script>
+        let minRange = 1;
+        let maxRange = 100;
+        let targetNumber = generateRandomNumber(minRange, maxRange);
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function updateHint() {
+            document.getElementById('hint').innerText = `범위: ${minRange}에서 ${maxRange}까지의 숫자를 맞춰보세요!`;
+        }
+
+        function checkGuess() {
+            const userGuess = document.getElementById('guess-input').value;
+
+            if (!isNaN(userGuess) && userGuess >= minRange && userGuess <= maxRange) {
+                attempts++;
+
+                if (userGuess == targetNumber) {
+                    document.getElementById('result').innerHTML = `축하합니다! ${attempts}번만에 숫자를 맞추셨어요!`;
+                    disableInput();
+                } else {
+                    const hint = userGuess < targetNumber ? '높은 숫자입니다.' : '낮은 숫자입니다.';
+                    document.getElementById('result').innerHTML = `틀렸어요! ${hint} 다시 도전하세요. (남은 시도: ${maxAttempts - attempts})`;
+
+                    if (attempts === maxAttempts) {
+                        document.getElementById('result').innerHTML = `게임 오버! 정답은 ${targetNumber}였어요. 다시 시작하세요.`;
+                        disableInput();
+                    }
+
+                    // 범위 좁히기
+                    if (userGuess < targetNumber) {
+                        minRange = Math.max(minRange, userGuess + 1);
+                    } else {
+                        maxRange = Math.min(maxRange, userGuess - 1);
+                    }
+
+                    // 새로운 숫자 생성
+                    targetNumber = generateRandomNumber(minRange, maxRange);
+
+                    // 힌트 업데이트
+                    updateHint();
+                }
+            } else {
+                document.getElementById('result').innerHTML = `범위 내에서 숫자를 입력하세요 ( ${minRange} - ${maxRange} )`;
+            }
+        }
+
+        function disableInput() {
+            document.getElementById('guess-input').disabled = true;
+            document.querySelector('button').disabled = true;
+        }
+
+        // 초기 힌트 업데이트
+        updateHint();
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 맞추기 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #guess-input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #F00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>숫자 맞추기 게임</h1>
+
+    <p id="hint">1에서 100까지의 숫자를 맞춰보세요!</p>
+
+    <input type="number" id="guess-input" placeholder="숫자를 입력하세요">
+    <button onclick="checkGuess()">제출</button>
+
+    <div id="result"></div>
+
+    <script>
+        let minRange = 1;
+        let maxRange = 100;
+        let targetNumber = generateRandomNumber(minRange, maxRange);
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function updateHint() {
+            document.getElementById('hint').innerText = `범위: ${minRange}에서 ${maxRange}까지의 숫자를 맞춰보세요!`;
+        }
+
+        function checkGuess() {
+            const userGuess = document.getElementById('guess-input').value;
+
+            if (!isNaN(userGuess) && userGuess >= minRange && userGuess <= maxRange) {
+                attempts++;
+
+                if (userGuess == targetNumber) {
+                    document.getElementById('result').innerHTML = `축하합니다! ${attempts}번만에 숫자를 맞추셨어요!`;
+                    disableInput();
+                } else {
+                    const hint = userGuess < targetNumber ? '높은 숫자입니다.' : '낮은 숫자입니다.';
+                    document.getElementById('result').innerHTML = `틀렸어요! ${hint} 다시 도전하세요. (남은 시도: ${maxAttempts - attempts})`;
+
+                    if (attempts === maxAttempts) {
+                        document.getElementById('result').innerHTML = `게임 오버! 정답은 ${targetNumber}였어요. 다시 시작하세요.`;
+                        disableInput();
+                    }
+
+                    // 범위 좁히기
+                    if (userGuess < targetNumber) {
+                        minRange = Math.max(minRange, userGuess + 1);
+                    } else {
+                        maxRange = Math.min(maxRange, userGuess - 1);
+                    }
+
+                    // 새로운 숫자 생성
+                    targetNumber = generateRandomNumber(minRange, maxRange);
+
+                    // 힌트 업데이트
+                    updateHint();
+
+                    // 장애물 생성
+                    createObstacle();
+                }
+            } else {
+                document.getElementById('result').innerHTML = `범위 내에서 숫자를 입력하세요 ( ${minRange} - ${maxRange} )`;
+            }
+        }
+
+        function disableInput() {
+            document.getElementById('guess-input').disabled = true;
+            document.querySelector('button').disabled = true;
+        }
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            obstacle.style.left = `${Math.random() * (window.innerWidth - 20)}px`;
+            obstacle.style.top = '0';
+
+            document.body.appendChild(obstacle);
+
+            animateObstacle(obstacle);
+        }
+
+        function animateObstacle(obstacle) {
+            const speed = Math.random() * 2 + 1;
+
+            function move() {
+                const top = parseInt(obstacle.style.top, 10);
+                obstacle.style.top = `${top + speed}px`;
+
+                if (top > window.innerHeight) {
+                    obstacle.remove();
+                } else {
+                    requestAnimationFrame(move);
+                }
+            }
+
+            move();
+        }
+
+        // 초기 힌트 업데이트
+        updateHint();
+    </script>
+
+</body>
+</html>
